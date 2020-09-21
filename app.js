@@ -7,6 +7,7 @@ const expressValidator = require("express-validator");
 
 require('dotenv').config();
 //import routes
+const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user')
 
 //DATABASE=mongodb+srv://azim:EGG6RNO13e4t0F6Z@cluster0.bcbty.mongodb.net/ecommerce?retryWrites=true&w=majority
@@ -21,6 +22,7 @@ app.use(cookieParser());
 app.use(expressValidator());
 
 //routes middleware
+app.use('/api',authRoutes);
 app.use('/api',userRoutes);
 
 //db
