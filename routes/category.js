@@ -1,15 +1,24 @@
 const express = require('express');
 const router = express.Router();
 
-const { create } = require('../controllers/category');
+const { create, catById, read, update, remove, list } = require('../controllers/category');
+// const { catById, read } = require('../controllers/category');
 const { requireSignin, isAuth, isAdmin } = require('../controllers/auth');
 const { userById } = require("../controllers/user");
+// const { update, remove } = require('../models/user');
 
 
-//get method
+//routes for user 
+router.get('/category/:categoryId', read)
+router.get('/catgs', list)
+router.post('/category/create/:userId',requireSignin, isAuth, isAdmin, create);
+router.put('/category/:categoryId/:userId',isAdmin, update);
+router.delete('/category/create/:userId',isAdmin, remove);
+
+router.param('categoryId', catById);
 router.param('userId', userById );
 
-router.post('/category/create/:userId',requireSignin, isAuth, isAdmin, create);
+
 
 
 module.exports = router;
