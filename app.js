@@ -8,7 +8,9 @@ const expressValidator = require("express-validator");
 require('dotenv').config();
 //import routes
 const authRoutes = require('./routes/auth');
-const userRoutes = require('./routes/user')
+const userRoutes = require('./routes/user');
+const categoryRoutes = require('./routes/category');
+const productRoutes = require('./routes/product');
 
 //DATABASE=mongodb+srv://azim:EGG6RNO13e4t0F6Z@cluster0.bcbty.mongodb.net/ecommerce?retryWrites=true&w=majority
 //EGG6RNO13e4t0F6Z is password
@@ -24,6 +26,8 @@ app.use(expressValidator());
 //routes middleware
 app.use('/api',authRoutes);
 app.use('/api',userRoutes);
+app.use('/api',categoryRoutes);
+app.use('/api',productRoutes);
 
 //db
 mongoose.connect(process.env.DATABASE ,{

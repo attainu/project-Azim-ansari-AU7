@@ -50,13 +50,13 @@ exports.signin = (req, res) => {
     });
 };
 
-//signout
+//signout routes
 exports.signout = (req,res) =>{
     res.clearCookie('t')
     res.json({message: 'Signout Successfully'})
 }
 
-//require signin
+//require signin token
 
 exports.requireSignin = expressJwt({
     secret: process.env.JWT_SECRET,
