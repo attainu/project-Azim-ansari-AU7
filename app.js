@@ -3,11 +3,13 @@ const mongoose = require('mongoose');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const cors = require('cors');
 const expressValidator = require("express-validator");
 
+//require envfile.
 require('dotenv').config();
 //import routes
-const authRoutes = require('./routes/auth');
+const authRoutes = require('./routes/authentication');
 const userRoutes = require('./routes/user');
 const categoryRoutes = require('./routes/category');
 const productRoutes = require('./routes/product');
@@ -15,21 +17,25 @@ const productRoutes = require('./routes/product');
 //DATABASE=mongodb+srv://azim:EGG6RNO13e4t0F6Z@cluster0.bcbty.mongodb.net/ecommerce?retryWrites=true&w=majority
 //EGG6RNO13e4t0F6Z is password
 //app
+
 const app = express();
-//middlewares
+
+
+//middlewares require
 
 app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(expressValidator());
+app.use(cors());
 
-//routes middleware
+//middlewares for the route
 app.use('/api',authRoutes);
 app.use('/api',userRoutes);
 app.use('/api',categoryRoutes);
 app.use('/api',productRoutes);
 
-//db
+//database connectiion
 mongoose.connect(process.env.DATABASE ,{
     useNewUrlParser: true,
     useCreateIndex: true,
@@ -39,10 +45,10 @@ mongoose.connect(process.env.DATABASE ,{
 })
 
 
-//port defined
+//Selected port
 const port = process.env.PORT || 8000
 
-//Listen
+//Listen on he port:
 app.listen(port , ()=>{
     console.log(`Server is running on port ${port}`)
 })

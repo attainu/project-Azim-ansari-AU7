@@ -28,6 +28,10 @@ const productSchema = new mongoose.Schema({
     quantity: {
         type: Number
     },
+    sell: {
+        type: Number,
+        default: 0
+    },
     photo: {
         data: Buffer,
         contentType: String
