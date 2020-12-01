@@ -3,7 +3,7 @@ const router = express.Router();
 
 const { create, catById, read, update, remove, list } = require('../controllers/category');
 // const { catById, read } = require('../controllers/category');
-const { requireSignin, isAuth, isAdmin } = require('../controllers/auth');
+const { requireSignin, isAuth, isAdmin } = require('../controllers/authentication');
 const { userById } = require("../controllers/user");
 // const { update, remove } = require('../models/user');
 

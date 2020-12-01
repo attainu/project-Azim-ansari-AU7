@@ -1,5 +1,5 @@
 /**
-* Get unique error fiels name
+* Get unique error fields name
 */
 // const uniqueMesssage = error => {
 //     let output;
@@ -28,11 +28,12 @@ const uniqueMessage = function(){
             error.message.lastIndexOf("_1")
         );
         output = fieldName.chartAt(0).toUpperCase()+
-                fieldName.slice(1)+
-                "Already exists";
-    } catch (ex) {
-        output = "Unique field Already exists";
-    }
+                fieldName.slice(1)+ "Already exists";
+    } 
+    catch (ex) 
+        {
+            output = "Unique field Already exists";
+        }
     return output;
 }
 

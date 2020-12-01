@@ -105,3 +105,97 @@ exports.update = (req, res) => {
         });
     });
 };
+ 
+//product listed by sorted on the basis of product sell ,order, arrivals
+
+exports.list = (req, res) => {
+    // for the product sell sort by order using 
+    //syntax ("http://localhost:8000/apiproducts?sortBy=sell&order=desc&limit=5") 
+     let limit = req.query.limit ? parseInt(req.query.limit) : 6
+     // for the sell sortBy using synntax ("http://localhost:8000/api/products?sortBy=createdAt&order=desc&limit=5")
+     let order = req.query.order ? req.query.order : 'asc'
+     //
+     let sortBy = req.query.sortBy ? req.query.sortBy : '_id'
+    
+     Product.find().select("-photo").populate('category').sort([[sortBy, order]]).limit(limit)
+     .exec((err, products) => {
+        if(err) {
+            return res.status(400).json({
+                error: 'Products not found'
+            })
+        }
+        res.json(products)
+     })
+};
+
+//related list of product.
+//it will find product in category product.
+//other product that has the same category
+exports.relatedList = (req, res) => {
+    let limit = req.query.limt ? parseInt( req.query.limt ): 6;
+
+    Product.find({_id: {$ne: req.product}, category: req.product.category})
+    .limit(limit).populate('category','_id name')
+    .exec((err, products) => {
+        if(err) {
+            return res.status(400).json({
+                error: "No product"
+            })
+        }
+        res.json(products)
+    })
+}
+
+//list of category and related category
+exports.listCatgs = (req, res ) => {
+    Product.distinct('category' , {} , (err, catgs) => {
+        if(err) {
+            return res.status(400).json({
+                error: "No category"
+            })
+        }
+        res.json(catgs)
+    })
+}
+
+//  list of product searched
+exports.searchFilters = (req, res) => {
+    let order = req.body.order ? req.body.order : 'desc';
+    let sortBy = req.body.sortBy ? req.body.sortBy : '_id';
+    let limit = req.body.limit ? req.body.limit : '95'
+    let skip = parseInt(req.body.skip);
+    let testInput = { };
+    for (let key in req.body.filters) {
+        if (req.body.filters[key].length > 0) {
+            if (key === "price") {
+                testInput[key] = {
+                    $gte: req.body.filters[key] [0],  //greater than $gte
+                    $lte: req.body.filters[key] [1]
+                };
+            } else {
+                testInput[key] = req.body.filters[key]
+            }
+        }
+    }
+    Product.find(testInput).select("-photo").populate('category').sort([[sortBy, order]]).skip(skip)
+    .exec((err, data) => {
+        if (err){
+        return res.status(400).json({
+            error: "No product"
+           });
+        }
+        res.json({
+            size: data.length,
+            data
+        })
+    })
+};
+
+//work as midddleware
+exports.photo = (req, res, next) => {
+    if(req.product.photo.data) {
+        res.set ("Content-Type", req.product.photo.contentType)
+        return res.send(req.product.photo.data)
+    }
+    next();
+};
